@@ -23,8 +23,8 @@ services:
     restart: unless-stopped
     environment:
       DATABASE_URL: postgres://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
-      DAMODAR_PASS: ${FOUNDERS_PASSPHRASE}
-      THARUN_PASS: ${FOUNDER1_PASSPHRASE}
+      FOUNDER1_PASS: ${FOUNDER1_PASSPHRASE}
+      FOUNDER2_PASS: ${FOUNDER2_PASSPHRASE}
       COOKIE_SECURE: ${COOKIE_SECURE}
     depends_on:
       db:
