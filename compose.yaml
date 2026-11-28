@@ -3,56 +3,59 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
       - pgdata:/var/lib/postgresql/data
-    ports:
-      - "127.0.0.1:5432:5432"   # local-only for testing; remove later
+    networks:
+      - db-internal
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
       interval: 5s
       timeout: 3s
       retries: 10
-    networks:
-      - db-internal
 
   api:
-    build: ./api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     restart: unless-stopped
-    environment:
-      DATABASE_URL: postgres://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
-      FOUNDER1_PASS: ${FOUNDER1_PASSPHRASE}
-      FOUNDER2_PASS: ${FOUNDER2_PASSPHRASE}
-      COOKIE_SECURE: ${COOKIE_SECURE}
     depends_on:
       db:
         condition: service_healthy
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}
+      UPLOAD_DIR: /app/uploads
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+      FOUNDER1_PASS: ${FOUNDER1_PASSPHRASE}
+      FOUNDER2_PASS: ${FOUNDER2_PASSPHRASE}
+    volumes:
+      - uploads_data:/app/uploads
     networks:
       - db-internal
-      - web-net
+      - web
 
   nginx:
     image: nginx:alpine
     restart: unless-stopped
+    depends_on:
+      - api
     ports:
       - "127.0.0.1:8080:80"
     volumes:
       - ./public:/usr/share/nginx/html:ro
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
-    depends_on:
-      - api
+      - uploads_data:/var/www/uploads:ro
     networks:
-      - web-net
-
-volumes:
-  pgdata:
-    external: true
+      - web
 
 networks:
   db-internal:
-    driver: bridge
     internal: true
-  web-net:
-    driver: bridge
+  web:
+
+volumes:
+  pgdata:
+  uploads_data:

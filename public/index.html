@@ -72,7 +72,7 @@
               <h1 class="feed-title" id="feedHeading">All Entries</h1>
               <button type="button" class="clear-search-btn" id="clearSearchBtn">✕ Clear search</button>
             </div>
-            <p class="feed-meta" id="feedMeta">0 entries</p>
+            <p class="feed-meta" id="feedMeta">Loading archive…</p>
           </div>
           <div class="feed-controls">
             <div class="segmented" id="sortTabs">
@@ -93,7 +93,7 @@
         <section class="post-list" id="postList"></section>
       </div>
 
-      <!-- 2. Smooth Tinted Entry & Discussion View -->
+      <!-- 2. Entry & Discussion View -->
       <div class="post-view-panel" id="postView">
         <div class="pv-inner">
           <div class="pv-nav">
@@ -214,7 +214,7 @@
     </div>
   </div>
 
-  <!-- Two-Column New / Edit Composer + Interactive Preview -->
+  <!-- Two-Column New / Edit Composer + Preview -->
   <div class="modal-backdrop" id="composerModal">
     <div class="modal composer-modal" role="dialog" aria-modal="true" aria-labelledby="composerTitle">
       <form id="postForm" style="display:flex; flex-direction:column; height:100%;">
@@ -229,7 +229,7 @@
         <div class="composer-workspace">
           <div class="composer-scroll" id="composerDropArea">
             <input id="fTitle" class="composer-title-input" required maxlength="120" placeholder="Title of your entry…" autocomplete="off" />
-            <textarea id="fSummary" class="composer-textarea" rows="4" required maxlength="1200" placeholder="Write your article, field notes, or caption…"></textarea>
+            <textarea id="fSummary" class="composer-textarea" rows="4" required maxlength="5000" placeholder="Write your article, field notes, or caption…"></textarea>
 
             <div class="health-caution-note" id="healthCautionNote">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>

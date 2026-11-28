@@ -1,7 +1,5 @@
 import crypto from 'node:crypto';
-import pg from 'pg';
-
-const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+import { pool, initDb } from './db.js';
 
 function hashPassword(password) {
   const salt = crypto.randomBytes(16).toString('hex');
@@ -9,20 +7,11 @@ function hashPassword(password) {
   return `${salt}:${derived}`;
 }
 
-await pool.query(`
-  CREATE TABLE IF NOT EXISTS admins (
-    id            SERIAL PRIMARY KEY,
-    username      VARCHAR(40) UNIQUE NOT NULL,
-    display_name  VARCHAR(80) NOT NULL,
-    title         VARCHAR(60) NOT NULL DEFAULT 'Admin',
-    password_hash TEXT NOT NULL,
-    created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
-  );
-`);
+await initDb();
 
 const admins = [
-  { username: 'damodar', display_name: 'Damodar', title: 'Founder',    password: process.env.DAMODAR_PASS },
-  { username: 'tharun',  display_name: 'Tharun',  title: 'Co-founder', password: process.env.THARUN_PASS }
+  { username: 'damodar', display_name: 'Damodar', title: 'Founder',    password: process.env.FOUNDER1_PASS },
+  { username: 'tharun',  display_name: 'Tharun',  title: 'Co-founder', password: process.env.FOUNDER2_PASS }
 ];
 
 for (const a of admins) {
